@@ -1,67 +1,87 @@
-const Gameplay = (cellId) => {
-        const cell = document.getElementById(`${cellId}`);
-        let winner = 0;
-        if (cell.textContent === '') {
-            cell.textContent = activePlayer.getIcon;
-            Gameboard[cellId] = activePlayer.getIcon;
-            
-            const g = Gameboard;
-            if (
-                g[0] && g[1] && g[2] && g[0] === g[1] && g[0] === g[2] ||
-                g[3] && g[4] && g[5] && g[3] === g[4] && g[3] === g[5] ||
-                g[6] && g[7] && g[8] && g[6] === g[7] && g[6] === g[8] ||
-                g[0] && g[3] && g[6] && g[0] === g[3] && g[0] === g[6] ||
-                g[1] && g[4] && g[7] && g[1] === g[4] && g[1] === g[7] ||
-                g[2] && g[5] && g[8] && g[2] === g[5] && g[2] === g[8] ||
-                g[0] && g[4] && g[8] && g[0] === g[4] && g[0] === g[8] ||
-                g[6] && g[4] && g[2] && g[6] === g[4] && g[6] === g[2]
-            ) {
-                winner = activePlayer.getName;
-                console.log(winner, 'wins');
-                activePlayer = null;
-            }
-            if (activePlayer === player1) {
-                activePlayer = player2;
-            } else if (activePlayer === player2) {
-                activePlayer = player1;
-            } else activePlayer = null;
-        }
-    return winner;
-}
-
 const Player = (icon, name) => {
     const getName = name; 
     const getIcon = icon;
     const score = 0;
-    return  {
-        getIcon,
-        score,
-        getName
-    };
+    return  {getIcon, score, getName};
 }
 const player1 = Player('X', 'Jeff');
 const player2 = Player('O', 'Gary');
 let activePlayer = player1;
 
 
-// create a player factory inside player module that runs when page loads
+// create a player factory inside player module that runs when page loads IIFE
 // player name, vs comp?, etc
-
-//figure out how to end a game
 
 const Players = () => {
 
 }
 
 const Gameboard = (() => {
-    const board = Array.apply(null, Array(9));
-    const boardContainer = document.querySelector('.gameboard-container');
-    for (let i = 0; i < board.length; i++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.setAttribute('id', i);
-        cell.addEventListener('click', () => Gameplay(i));
-        boardContainer.appendChild(cell);
-    }   
-    return board;
+    const board = (() => {
+        boardArray = Array.apply(null, Array(9));
+        const boardContainer = document.querySelector('.gameboard-container');
+        for (let i = 0; i < boardArray.length; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.id = i;
+            cell.addEventListener('click', () => Gameplay.play(i));
+            boardContainer.appendChild(cell);
+        } 
+        return {boardArray};
+    })();
+    const resetGame = (() => {
+        const reset = document.querySelector('.resetGame');
+        reset.addEventListener('click', () => {
+            for (let i = 0; i < Gameboard.boardArray.length; i++) {
+                Gameboard.boardArray[i] = undefined;
+                document.getElementById(i).textContent = '';
+            }
+        })
+    })();
+    return {board, boardArray, resetGame}; // try returning boardarray here
+})();
+
+const Gameplay = (() => {
+    const play = (cellId) => {
+        const cell = document.getElementById(`${cellId}`);
+        const gb = Gameboard.boardArray;
+        if (gb[cellId] === undefined) {
+            cell.textContent = activePlayer.getIcon;
+            gb[cellId] = activePlayer.getIcon;
+            
+            if (
+                gb[0] && gb[1] && gb[2] && gb[0] === gb[1] && gb[0] === gb[2] ||
+                gb[3] && gb[4] && gb[5] && gb[3] === gb[4] && gb[3] === gb[5] ||
+                gb[6] && gb[7] && gb[8] && gb[6] === gb[7] && gb[6] === gb[8] ||
+                gb[0] && gb[3] && gb[6] && gb[0] === gb[3] && gb[0] === gb[6] ||
+                gb[1] && gb[4] && gb[7] && gb[1] === gb[4] && gb[1] === gb[7] ||
+                gb[2] && gb[5] && gb[8] && gb[2] === gb[5] && gb[2] === gb[8] ||
+                gb[0] && gb[4] && gb[8] && gb[0] === gb[4] && gb[0] === gb[8] ||
+                gb[6] && gb[4] && gb[2] && gb[6] === gb[4] && gb[6] === gb[2]
+            ) {
+                setTimeout(() => {
+                    alert(`${activePlayer.getName} ${activePlayer.getIcon} wins`);
+                }, 0);
+                
+                for (let i = 0; i < gb.length; i++) {
+                    if (gb[i] === undefined) {
+                        gb[i] = 'gameover';
+                    }    
+                }     
+            }
+            else if (activePlayer === player1) {
+                activePlayer = player2;
+            } else if (activePlayer === player2) {
+                activePlayer = player1;
+            } else activePlayer = null;
+        }
+    };
+    const newPlayers = (() => {
+        const newGame = document.querySelector('.newGame');
+        newGame.addEventListener('click', () => {
+            location.reload();
+            return false;
+        })
+    })();
+    return {play, newPlayers};
 })();
