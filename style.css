@@ -1,6 +1,7 @@
 .gameboard-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, 100px);
+    grid-template-rows: repeat(auto-fit, 100px);
     width: 300px;
     height: 300px;
     border: 1px solid black;

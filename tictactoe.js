@@ -1,11 +1,14 @@
-const Player = (icon, name) => {
+const Player = (icon, name, player) => {
     const getName = name; 
     const getIcon = icon;
     const score = 0;
-    return  {getIcon, score, getName};
+    const displayScore = () => {
+        document.getElementById(`player${player}`).textContent = activePlayer.score;
+    }
+    return  {getIcon, displayScore, score, getName};
 }
-const player1 = Player('X', 'Jeff');
-const player2 = Player('O', 'Gary');
+const player1 = Player('X', 'Jeff', '1');
+const player2 = Player('O', 'Gary', '2');
 let activePlayer = player1;
 
 
@@ -38,7 +41,7 @@ const Gameboard = (() => {
             }
         })
     })();
-    return {board, boardArray, resetGame}; // try returning boardarray here
+    return {board, boardArray, resetGame};
 })();
 
 const Gameplay = (() => {
@@ -59,6 +62,8 @@ const Gameplay = (() => {
                 gb[0] && gb[4] && gb[8] && gb[0] === gb[4] && gb[0] === gb[8] ||
                 gb[6] && gb[4] && gb[2] && gb[6] === gb[4] && gb[6] === gb[2]
             ) {
+                activePlayer.score++;
+                activePlayer.displayScore();
                 setTimeout(() => {
                     alert(`${activePlayer.getName} ${activePlayer.getIcon} wins`);
                 }, 0);
