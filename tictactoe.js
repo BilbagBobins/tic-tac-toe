@@ -3,21 +3,28 @@ const Player = (icon, name, player) => {
     const getIcon = icon;
     const score = 0;
     const displayScore = () => {
-        document.getElementById(`player${player}`).textContent = activePlayer.score;
+        document.getElementById(`player${player}score`).textContent = activePlayer.score;
     }
     return  {getIcon, displayScore, score, getName};
 }
-const player1 = Player('X', 'Jeff', '1');
-const player2 = Player('O', 'Gary', '2');
-let activePlayer = player1;
 
-
-// create a player factory inside player module that runs when page loads IIFE
-// player name, vs comp?, etc
+let player1 = '';
+let player2 = '';
+let activePlayer = '';
 
 const Players = () => {
-
-}
+    for (let i = 1; i < 3; i++) {
+        if (i === 1) {
+            const player = prompt(`Player ${i}`);
+            player1 = Player('X', player, '1');
+        } else if (i > 1) {
+            const player = prompt(`Player ${i}`);
+            player2 = Player('O', player, '2');
+        }
+    }
+    activePlayer = player1;
+    return{player1, player2, activePlayer}
+};
 
 const Gameboard = (() => {
     const board = (() => {
@@ -84,8 +91,7 @@ const Gameplay = (() => {
     const newPlayers = (() => {
         const newGame = document.querySelector('.newGame');
         newGame.addEventListener('click', () => {
-            location.reload();
-            return false;
+            Players();
         })
     })();
     return {play, newPlayers};
