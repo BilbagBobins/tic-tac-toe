@@ -1,9 +1,10 @@
-const Player = (icon, name, player) => {
+const Player = (icon, name, number) => {
     const getName = name; 
     const getIcon = icon;
+    const playerNum = `player${number}`;
     const score = 0;
     const displayScore = () => {
-        document.getElementById(`player${player}score`).textContent = activePlayer.score;
+        document.getElementById(`player${number}score`).textContent = eval(playerNum).score;
     }
     return  {getIcon, displayScore, score, getName};
 }
@@ -11,20 +12,6 @@ const Player = (icon, name, player) => {
 let player1 = '';
 let player2 = '';
 let activePlayer = '';
-
-const Players = () => {
-    for (let i = 1; i < 3; i++) {
-        if (i === 1) {
-            const player = prompt(`Player ${i}`);
-            player1 = Player('X', player, '1');
-        } else if (i > 1) {
-            const player = prompt(`Player ${i}`);
-            player2 = Player('O', player, '2');
-        }
-    }
-    activePlayer = player1;
-    return{player1, player2, activePlayer}
-};
 
 const Gameboard = (() => {
     const board = (() => {
@@ -39,16 +26,39 @@ const Gameboard = (() => {
         } 
         return {boardArray};
     })();
-    const resetGame = (() => {
-        const reset = document.querySelector('.resetGame');
-        reset.addEventListener('click', () => {
-            for (let i = 0; i < Gameboard.boardArray.length; i++) {
-                Gameboard.boardArray[i] = undefined;
-                document.getElementById(i).textContent = '';
+    const resetBoard = () => {
+        for (let i = 0; i < Gameboard.boardArray.length; i++) {
+            Gameboard.boardArray[i] = undefined;
+            document.getElementById(i).textContent = '';
+        }
+    };
+    document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
+    
+    document.querySelector('.newPlayers').addEventListener('click', () => {
+        for (let i = 1; i < 3; i++) {
+            if (i === 1) {
+                const playerName = prompt(`Player ${i}`);
+                player1 = Player('X', playerName, i);
+                document.getElementById('player1').textContent = playerName + ': ';
+            } else if (i > 1) {
+                const playerName = prompt(`Player ${i}`);
+                player2 = Player('O', playerName, i);
+                document.getElementById('player2').textContent = playerName + ': ';
             }
-        })
-    })();
-    return {board, boardArray, resetGame};
+        }
+        resetBoard();
+        for (let i = 1; i < 3; i++) {
+            const player = eval(`player${i}`);
+            player.score = 0;
+            player.displayScore();
+        }
+        player1.score = player2.score = 0;
+
+        document.querySelector('.scores-container').style.visibility = 'visible';
+        activePlayer = player1;
+        return{player1, player2, activePlayer}
+    })
+    return {board, boardArray, resetBoard};
 })();
 
 const Gameplay = (() => {
@@ -79,7 +89,8 @@ const Gameplay = (() => {
                     if (gb[i] === undefined) {
                         gb[i] = 'gameover';
                     }    
-                }     
+                } 
+                document.querySelector('.newMatch').style.visibility = 'visible';    
             }
             else if (activePlayer === player1) {
                 activePlayer = player2;
@@ -88,11 +99,6 @@ const Gameplay = (() => {
             } else activePlayer = null;
         }
     };
-    const newPlayers = (() => {
-        const newGame = document.querySelector('.newGame');
-        newGame.addEventListener('click', () => {
-            Players();
-        })
-    })();
-    return {play, newPlayers};
+    
+    return {play};
 })();

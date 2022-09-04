@@ -16,3 +16,11 @@
 .cell:hover {
     cursor: pointer;
 }
+
+.newMatch {
+    visibility: hidden;
+}
+
+.scores-container {
+    visibility: hidden;
+}
