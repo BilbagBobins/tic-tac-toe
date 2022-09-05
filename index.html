@@ -11,17 +11,38 @@
 <body>
     <header>Tic - Tac - Toe</header>
     <div class="form-container">
-        <form action="" method="post" id="opponent">
-            <input type="button" value="human">
-            <input type="button" value="Computer">
+        <div class="opponent">
+            <input type="submit" value="human" id="human">
+            <input type="submit" value="computer" id="computer">
+        </div>
+        <form action="" method="post" id="1pName">
+            <ul>
+                <li>
+                    <label for="1pname1">Player name: <input type="text" id="1pname1"></label>
+                </li>
+                <li><button type="submit" id="1pPlay">Let's go</button></li>
+            </ul>
+        </form>
+        <form action="" method="post" id="2pNames">
+            <ul>
+                <li>
+                    <label for="name1">Player 1 name: </label><input type="text" id="name1">
+                </li>
+                <li>
+                    <label for="name2">Player 2 name: </label><input type="text" id="name2">
+                </li>
+                <li><button type="submit" id="2pPlay">Let's Play</button></li>
+            </ul>
         </form>
     </div>
-    <div class="gameboard-container"></div>
-    <button class="newPlayers">New Players</button>
-    <button class="newMatch">New Match</button>
-    <div class="scores-container">Scores
-        <div id="player1Name">Player 1: </div><span id="player1score">0</span>
-        <div id="player2Name">Player 2: </div><span id="player2score">0</span>
+    <div class="gameplay-container">
+        <div class="gameboard-container"></div>
+        <button class="newPlayers">New Players</button>
+        <button class="newMatch">New Match</button>
+        <div class="scores-container">Scores
+            <div id="player1Name">Player 1: </div><span id="player1score">0</span>
+            <div id="player2Name">Player 2: </div><span id="player2score">0</span>
+        </div>
     </div>
 </body>
 </html>

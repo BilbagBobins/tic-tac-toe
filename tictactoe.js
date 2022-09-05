@@ -9,6 +9,7 @@ const Gameboard = (() => {
     let player1 = '';
     let player2 = '';
     let activePlayer = '';
+
     const board = (() => {
         boardArray = Array.apply(null, Array(9));
         const boardContainer = document.querySelector('.gameboard-container');
@@ -21,6 +22,7 @@ const Gameboard = (() => {
         } 
         return {boardArray};
     })();
+
     const resetBoard = () => {
         for (let i = 0; i < Gameboard.boardArray.length; i++) {
             Gameboard.boardArray[i] = undefined;
@@ -31,28 +33,33 @@ const Gameboard = (() => {
         document.getElementById('player1score').textContent = Gameboard.player1.score;
         document.getElementById('player2score').textContent = Gameboard.player2.score;
     }
+    
+    const playerNames = (event) => {
+        event.preventDefault();
+        const player1Name = document.getElementById('name1').value;
+        Gameboard.player1 = Player('X', player1Name, 1);
+        document.getElementById('player1Name').textContent = player1Name + ': ';
+
+        const player2Name = document.getElementById('name2').value;
+        Gameboard.player2 = Player('O', player2Name, 2);
+        document.getElementById('player2Name').textContent = player2Name + ': ';
+        
+        GameSetup.name2p.style.visibility = 'hidden';
+        GameSetup.game.style.visibility = 'visible';
+        resetBoard();
+        Gameboard.player1.score = Gameboard.player2.score = 0;
+        displayScores();   
+        document.querySelector('.scores-container').style.visibility = 'visible';
+        Gameboard.activePlayer = Gameboard.player1;     
+    }
+
     document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
     
     document.querySelector('.newPlayers').addEventListener('click', () => {
-        for (let i = 1; i < 3; i++) {
-            if (i === 1) {
-                const playerName = prompt(`Player ${i}`);
-                Gameboard.player1 = Player('X', playerName, i);
-                document.getElementById('player1Name').textContent = playerName + ': ';
-            } else if (i > 1) {
-                const playerName = prompt(`Player ${i}`);
-                Gameboard.player2 = Player('O', playerName, i);
-                document.getElementById('player2Name').textContent = playerName + ': ';
-            }
-        }
-        resetBoard();
-        Gameboard.player1.score = Gameboard.player2.score = 0;
-        displayScores();
-
-        document.querySelector('.scores-container').style.visibility = 'visible';
-        Gameboard.activePlayer = Gameboard.player1;
+        location.reload();
+        return false;
     })
-    return {player1, player2, activePlayer, boardArray, displayScores};
+    return {player1, player2, activePlayer, boardArray, displayScores, playerNames};
 })();
 
 const Gameplay = (() => {
@@ -107,4 +114,24 @@ const Gameplay = (() => {
     };
     
     return {play};
+})();
+
+const GameSetup = (() => {
+    const game = document.querySelector('.gameplay-container');
+    const opponent = document.querySelector('.opponent');
+    const name1p = document.getElementById('1pName');
+    name1p.style.visibility = 'hidden';
+    const name2p = document.getElementById('2pNames');
+    name2p.style.visibility = 'hidden';
+    game.style.visibility = 'hidden';
+    document.getElementById('human').addEventListener('click', () => {
+        opponent.style.visibility = 'hidden';
+        name2p.style.visibility = 'visible';
+        document.getElementById('2pPlay').addEventListener('click', Gameboard.playerNames)
+    });
+    document.getElementById('computer').addEventListener('click', () => {
+        opponent.style.visibility = 'hidden';
+        name1p.style.visibility = 'visible';
+    });
+    return{name1p, name2p, game};
 })();
