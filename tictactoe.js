@@ -1,12 +1,8 @@
 const Player = (icon, name, number) => {
     const getName = name; 
     const getIcon = icon;
-    const playerNum = `player${number}`;
     const score = 0;
-    const displayScore = () => {
-        document.getElementById(`player${number}score`).textContent = eval(playerNum).score;
-    }
-    return  {getIcon, displayScore, score, getName};
+    return  {getIcon, getName, score};
 }
 
 let player1 = '';
@@ -32,6 +28,10 @@ const Gameboard = (() => {
             document.getElementById(i).textContent = '';
         }
     };
+    const displayScores = () => {
+        document.getElementById('player1score').textContent = player1.score;
+        document.getElementById('player2score').textContent = player2.score;
+    }
     document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
     
     document.querySelector('.newPlayers').addEventListener('click', () => {
@@ -39,26 +39,21 @@ const Gameboard = (() => {
             if (i === 1) {
                 const playerName = prompt(`Player ${i}`);
                 player1 = Player('X', playerName, i);
-                document.getElementById('player1').textContent = playerName + ': ';
+                document.getElementById('player1Name').textContent = playerName + ': ';
             } else if (i > 1) {
                 const playerName = prompt(`Player ${i}`);
                 player2 = Player('O', playerName, i);
-                document.getElementById('player2').textContent = playerName + ': ';
+                document.getElementById('player2Name').textContent = playerName + ': ';
             }
         }
         resetBoard();
-        for (let i = 1; i < 3; i++) {
-            const player = eval(`player${i}`);
-            player.score = 0;
-            player.displayScore();
-        }
         player1.score = player2.score = 0;
+        displayScores();
 
         document.querySelector('.scores-container').style.visibility = 'visible';
         activePlayer = player1;
-        return{player1, player2, activePlayer}
     })
-    return {board, boardArray, resetBoard};
+    return {boardArray, displayScores};
 })();
 
 const Gameplay = (() => {
@@ -80,7 +75,7 @@ const Gameplay = (() => {
                 gb[6] && gb[4] && gb[2] && gb[6] === gb[4] && gb[6] === gb[2]
             ) {
                 activePlayer.score++;
-                activePlayer.displayScore();
+                Gameboard.displayScores();
                 setTimeout(() => {
                     alert(`${activePlayer.getName} ${activePlayer.getIcon} wins`);
                 }, 0);
