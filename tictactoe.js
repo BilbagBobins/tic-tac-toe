@@ -5,11 +5,10 @@ const Player = (icon, name, number) => {
     return  {getIcon, getName, score};
 }
 
-let player1 = '';
-let player2 = '';
-let activePlayer = '';
-
 const Gameboard = (() => {
+    let player1 = '';
+    let player2 = '';
+    let activePlayer = '';
     const board = (() => {
         boardArray = Array.apply(null, Array(9));
         const boardContainer = document.querySelector('.gameboard-container');
@@ -29,8 +28,8 @@ const Gameboard = (() => {
         }
     };
     const displayScores = () => {
-        document.getElementById('player1score').textContent = player1.score;
-        document.getElementById('player2score').textContent = player2.score;
+        document.getElementById('player1score').textContent = Gameboard.player1.score;
+        document.getElementById('player2score').textContent = Gameboard.player2.score;
     }
     document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
     
@@ -38,22 +37,22 @@ const Gameboard = (() => {
         for (let i = 1; i < 3; i++) {
             if (i === 1) {
                 const playerName = prompt(`Player ${i}`);
-                player1 = Player('X', playerName, i);
+                Gameboard.player1 = Player('X', playerName, i);
                 document.getElementById('player1Name').textContent = playerName + ': ';
             } else if (i > 1) {
                 const playerName = prompt(`Player ${i}`);
-                player2 = Player('O', playerName, i);
+                Gameboard.player2 = Player('O', playerName, i);
                 document.getElementById('player2Name').textContent = playerName + ': ';
             }
         }
         resetBoard();
-        player1.score = player2.score = 0;
+        Gameboard.player1.score = Gameboard.player2.score = 0;
         displayScores();
 
         document.querySelector('.scores-container').style.visibility = 'visible';
-        activePlayer = player1;
+        Gameboard.activePlayer = Gameboard.player1;
     })
-    return {boardArray, displayScores};
+    return {player1, player2, activePlayer, boardArray, displayScores};
 })();
 
 const Gameplay = (() => {
@@ -61,8 +60,8 @@ const Gameplay = (() => {
         const cell = document.getElementById(`${cellId}`);
         const gb = Gameboard.boardArray;
         if (gb[cellId] === undefined) {
-            cell.textContent = activePlayer.getIcon;
-            gb[cellId] = activePlayer.getIcon;
+            cell.textContent = Gameboard.activePlayer.getIcon;
+            gb[cellId] = Gameboard.activePlayer.getIcon;
             
             if (
                 gb[0] && gb[1] && gb[2] && gb[0] === gb[1] && gb[0] === gb[2] ||
@@ -74,10 +73,10 @@ const Gameplay = (() => {
                 gb[0] && gb[4] && gb[8] && gb[0] === gb[4] && gb[0] === gb[8] ||
                 gb[6] && gb[4] && gb[2] && gb[6] === gb[4] && gb[6] === gb[2]
             ) {
-                activePlayer.score++;
+                Gameboard.activePlayer.score++;
                 Gameboard.displayScores();
                 setTimeout(() => {
-                    alert(`${activePlayer.getName} ${activePlayer.getIcon} wins`);
+                    alert(`${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`);
                 }, 0);
                 
                 for (let i = 0; i < gb.length; i++) {
@@ -85,13 +84,25 @@ const Gameplay = (() => {
                         gb[i] = 'gameover';
                     }    
                 } 
-                document.querySelector('.newMatch').style.visibility = 'visible';    
+                document.querySelector('.newMatch').style.visibility = 'visible';
+                return;
+            } else if (Gameboard.activePlayer === Gameboard.player1) {
+                Gameboard.activePlayer = Gameboard.player2;
+            } else if (Gameboard.activePlayer === Gameboard.player2) {
+                Gameboard.activePlayer = Gameboard.player1;
+            } else Gameboard.activePlayer = null;
+            let count = 0;
+            for (i = 0; i < gb.length; i++) {
+                if (gb[i] !== undefined) {
+                    count++;
+                }
+                if (count === 9) {
+                    setTimeout(() => {
+                        alert('It\'s a draw');
+                        document.querySelector('.newMatch').style.visibility = 'visible';
+                    }, 0);
+                }
             }
-            else if (activePlayer === player1) {
-                activePlayer = player2;
-            } else if (activePlayer === player2) {
-                activePlayer = player1;
-            } else activePlayer = null;
         }
     };
     
