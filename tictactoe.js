@@ -45,6 +45,7 @@ const Gameboard = (() => {
         document.getElementById('player2Name').textContent = player2Name + ': ';
         
         GameSetup.name2p.style.visibility = 'hidden';
+        
         GameSetup.game.style.visibility = 'visible';
         resetBoard();
         Gameboard.player1.score = Gameboard.player2.score = 0;
@@ -53,23 +54,39 @@ const Gameboard = (() => {
         Gameboard.activePlayer = Gameboard.player1;     
     }
 
+    const singlePlayerName = (event) => {
+        event.preventDefault();
+        const playerName = document.getElementById('1pname1').value;
+        Gameboard.player1 = Player('X', playerName, 1);
+        Gameboard.player2 = Player('O', 'Computer', 2);
+        document.getElementById('player1Name').textContent = playerName + ': ';
+        document.getElementById('player2Name').textContent = 'Computer: ';
+
+        GameSetup.name1p.style.visibility = 'hidden';
+        GameSetup.game.style.visibility = 'visible';
+        resetBoard();
+        Gameboard.player1.score = Gameboard.player2.score = 0;
+        displayScores();   
+        document.querySelector('.scores-container').style.visibility = 'visible';
+        Gameboard.activePlayer = Gameboard.player1; 
+    }
+
+
     document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
     
     document.querySelector('.newPlayers').addEventListener('click', () => {
         location.reload();
         return false;
     })
-    return {player1, player2, activePlayer, boardArray, displayScores, playerNames};
+    return {player1, player2, activePlayer, boardArray, displayScores, playerNames, singlePlayerName};
 })();
 
 const Gameplay = (() => {
     const play = (cellId) => {
         const cell = document.getElementById(`${cellId}`);
         const gb = Gameboard.boardArray;
-        if (gb[cellId] === undefined) {
-            cell.textContent = Gameboard.activePlayer.getIcon;
-            gb[cellId] = Gameboard.activePlayer.getIcon;
-            
+         
+        const move = () => {
             if (
                 gb[0] && gb[1] && gb[2] && gb[0] === gb[1] && gb[0] === gb[2] ||
                 gb[3] && gb[4] && gb[5] && gb[3] === gb[4] && gb[3] === gb[5] ||
@@ -98,6 +115,7 @@ const Gameplay = (() => {
             } else if (Gameboard.activePlayer === Gameboard.player2) {
                 Gameboard.activePlayer = Gameboard.player1;
             } else Gameboard.activePlayer = null;
+            
             let count = 0;
             for (i = 0; i < gb.length; i++) {
                 if (gb[i] !== undefined) {
@@ -111,6 +129,14 @@ const Gameplay = (() => {
                 }
             }
         }
+        if (gb[cellId] === undefined) {
+            cell.textContent = Gameboard.activePlayer.getIcon;
+            gb[cellId] = Gameboard.activePlayer.getIcon;
+            move();
+            if (GameSetup.computer) {
+                // TODO add computer logic here... I think
+            }
+        }  
     };
     
     return {play};
@@ -120,18 +146,22 @@ const GameSetup = (() => {
     const game = document.querySelector('.gameplay-container');
     const opponent = document.querySelector('.opponent');
     const name1p = document.getElementById('1pName');
-    name1p.style.visibility = 'hidden';
     const name2p = document.getElementById('2pNames');
+
+    name1p.style.visibility = 'hidden'; 
     name2p.style.visibility = 'hidden';
     game.style.visibility = 'hidden';
+
     document.getElementById('human').addEventListener('click', () => {
         opponent.style.visibility = 'hidden';
         name2p.style.visibility = 'visible';
         document.getElementById('2pPlay').addEventListener('click', Gameboard.playerNames)
     });
     document.getElementById('computer').addEventListener('click', () => {
+        const computer = true;
         opponent.style.visibility = 'hidden';
         name1p.style.visibility = 'visible';
+        document.getElementById('1pPlay').addEventListener('click', Gameboard.singlePlayerName)
     });
-    return{name1p, name2p, game};
+    return{name1p, name2p, game, computer};
 })();
