@@ -129,13 +129,33 @@ const Gameplay = (() => {
                 }
             }
         }
+        const Random = () => {
+            return Math.floor(Math.random() * 8)
+        }
         if (gb[cellId] === undefined) {
             cell.textContent = Gameboard.activePlayer.getIcon;
             gb[cellId] = Gameboard.activePlayer.getIcon;
             move();
-            if (GameSetup.computer) {
-                // TODO add computer logic here... I think
-            }
+            setTimeout(() => {
+                if (GameSetup.computer) {
+                    // Computer logic
+                    let randomNum = '';
+                    do {
+                        if (gb[randomNum] === 'gameover') {
+                            return
+                        } else randomNum = Random();
+                    } while (gb[randomNum] !== undefined);
+                    document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
+                    gb[randomNum] = Gameboard.activePlayer.getIcon;
+                    setTimeout(() => {
+                        move();
+                    }, 50);
+                }
+            }, 500);
+
+            // TODO 
+            // sort out active player change over at end of computer game
+            
         }  
     };
     
