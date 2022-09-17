@@ -28,6 +28,11 @@ const Gameboard = (() => {
             Gameboard.boardArray[i] = undefined;
             document.getElementById(i).textContent = '';
         }
+        if (GameSetup.computer) {
+            if (Gameboard.activePlayer === Gameboard.player2) {
+                Gameplay.ComputerPlay();
+            }
+        }
     };
     const displayScores = () => {
         document.getElementById('player1score').textContent = Gameboard.player1.score;
@@ -86,80 +91,82 @@ const Gameplay = (() => {
         const cell = document.getElementById(`${cellId}`);
         const gb = Gameboard.boardArray;
          
-        const move = () => {
-            if (
-                gb[0] && gb[1] && gb[2] && gb[0] === gb[1] && gb[0] === gb[2] ||
-                gb[3] && gb[4] && gb[5] && gb[3] === gb[4] && gb[3] === gb[5] ||
-                gb[6] && gb[7] && gb[8] && gb[6] === gb[7] && gb[6] === gb[8] ||
-                gb[0] && gb[3] && gb[6] && gb[0] === gb[3] && gb[0] === gb[6] ||
-                gb[1] && gb[4] && gb[7] && gb[1] === gb[4] && gb[1] === gb[7] ||
-                gb[2] && gb[5] && gb[8] && gb[2] === gb[5] && gb[2] === gb[8] ||
-                gb[0] && gb[4] && gb[8] && gb[0] === gb[4] && gb[0] === gb[8] ||
-                gb[6] && gb[4] && gb[2] && gb[6] === gb[4] && gb[6] === gb[2]
-            ) {
-                Gameboard.activePlayer.score++;
-                Gameboard.displayScores();
-                setTimeout(() => {
-                    alert(`${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`);
-                }, 0);
-                
-                for (let i = 0; i < gb.length; i++) {
-                    if (gb[i] === undefined) {
-                        gb[i] = 'gameover';
-                    }    
-                } 
-                document.querySelector('.newMatch').style.visibility = 'visible';
-                return;
-            } else if (Gameboard.activePlayer === Gameboard.player1) {
-                Gameboard.activePlayer = Gameboard.player2;
-            } else if (Gameboard.activePlayer === Gameboard.player2) {
-                Gameboard.activePlayer = Gameboard.player1;
-            } else Gameboard.activePlayer = null;
-            
-            let count = 0;
-            for (i = 0; i < gb.length; i++) {
-                if (gb[i] !== undefined) {
-                    count++;
-                }
-                if (count === 9) {
-                    setTimeout(() => {
-                        alert('It\'s a draw');
-                        document.querySelector('.newMatch').style.visibility = 'visible';
-                    }, 0);
-                }
-            }
-        }
-        const Random = () => {
-            return Math.floor(Math.random() * 8)
-        }
         if (gb[cellId] === undefined) {
             cell.textContent = Gameboard.activePlayer.getIcon;
             gb[cellId] = Gameboard.activePlayer.getIcon;
             move();
-            setTimeout(() => {
-                if (GameSetup.computer) {
-                    // Computer logic
-                    let randomNum = '';
-                    do {
-                        if (gb[randomNum] === 'gameover') {
-                            return
-                        } else randomNum = Random();
-                    } while (gb[randomNum] !== undefined);
-                    document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
-                    gb[randomNum] = Gameboard.activePlayer.getIcon;
-                    setTimeout(() => {
-                        move();
-                    }, 50);
-                }
-            }, 500);
-
-            // TODO 
-            // sort out active player change over at end of computer game
-            
+            ComputerPlay();
         }  
     };
+
+    const ComputerPlay = () => {
+        const gb = Gameboard.boardArray;
+        setTimeout(() => {
+            if (GameSetup.computer) {
+                let randomNum = '';
+                do {
+                    if (gb[randomNum] === 'gameover') {
+                        return
+                    } else randomNum = Math.floor(Math.random() * 8);
+                } while (gb[randomNum] !== undefined);
+                document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
+                gb[randomNum] = Gameboard.activePlayer.getIcon;
+                setTimeout(() => {
+                    move();
+                }, 50);
+            }
+        }, 500);
+    }
+
+    const move = () => {
+        const gb = Gameboard.boardArray;
+        if (
+            gb[0] && gb[1] && gb[2] && gb[0] === gb[1] && gb[0] === gb[2] ||
+            gb[3] && gb[4] && gb[5] && gb[3] === gb[4] && gb[3] === gb[5] ||
+            gb[6] && gb[7] && gb[8] && gb[6] === gb[7] && gb[6] === gb[8] ||
+            gb[0] && gb[3] && gb[6] && gb[0] === gb[3] && gb[0] === gb[6] ||
+            gb[1] && gb[4] && gb[7] && gb[1] === gb[4] && gb[1] === gb[7] ||
+            gb[2] && gb[5] && gb[8] && gb[2] === gb[5] && gb[2] === gb[8] ||
+            gb[0] && gb[4] && gb[8] && gb[0] === gb[4] && gb[0] === gb[8] ||
+            gb[6] && gb[4] && gb[2] && gb[6] === gb[4] && gb[6] === gb[2]
+        ) {
+            Gameboard.activePlayer.score++;
+            Gameboard.displayScores();
+            setTimeout(() => {
+                alert(`${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`);
+            }, 10);
+            
+            for (let i = 0; i < gb.length; i++) {
+                if (gb[i] === undefined) {
+                    gb[i] = 'gameover';
+                }    
+            } 
+            document.querySelector('.newMatch').style.visibility = 'visible';
+            return;
+        } else if (Gameboard.activePlayer === Gameboard.player1) {
+            Gameboard.activePlayer = Gameboard.player2;
+        } else if (Gameboard.activePlayer === Gameboard.player2) {
+            Gameboard.activePlayer = Gameboard.player1;
+        } else Gameboard.activePlayer = null;
+        
+        let count = 0;
+        for (i = 0; i < gb.length; i++) {
+            if (gb[i] !== undefined) {
+                count++;
+            }
+            if (count === 9) {
+                setTimeout(() => {
+                    alert('It\'s a draw');
+                    document.querySelector('.newMatch').style.visibility = 'visible';
+                }, 0);
+                for (let i = 0; i < gb.length; i++) {
+                        gb[i] = 'gameover'; 
+                } 
+            }
+        }
+    }
     
-    return {play};
+    return {play, ComputerPlay};
 })();
 
 const GameSetup = (() => {
