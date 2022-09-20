@@ -9,6 +9,7 @@ const Gameboard = (() => {
     let player1 = '';
     let player2 = '';
     let activePlayer = '';
+    let winner = player1;
 
     const board = (() => {
         boardArray = Array.apply(null, Array(9));
@@ -24,6 +25,10 @@ const Gameboard = (() => {
     })();
 
     const resetBoard = () => {
+        if (!Gameplay.gameover) {
+            Gameboard.activePlayer = Gameboard.winner;
+        }
+        Gameplay.gameover = false;
         for (let i = 0; i < Gameboard.boardArray.length; i++) {
             Gameboard.boardArray[i] = undefined;
             document.getElementById(i).textContent = '';
@@ -83,10 +88,11 @@ const Gameboard = (() => {
         location.reload();
         return false;
     })
-    return {player1, player2, activePlayer, boardArray, displayScores, playerNames, singlePlayerName};
+    return {player1, player2, activePlayer, winner, boardArray, displayScores, playerNames, singlePlayerName};
 })();
 
 const Gameplay = (() => {
+    let gameover = false;
     const play = (cellId) => {
         const cell = document.getElementById(`${cellId}`);
         const gb = Gameboard.boardArray;
@@ -95,27 +101,35 @@ const Gameplay = (() => {
             cell.textContent = Gameboard.activePlayer.getIcon;
             gb[cellId] = Gameboard.activePlayer.getIcon;
             move();
-            ComputerPlay();
+            if (!Gameplay.gameover) {
+                ComputerPlay();
+            }
         }  
     };
 
     const ComputerPlay = () => {
         const gb = Gameboard.boardArray;
         setTimeout(() => {
-            if (GameSetup.computer) {
-                let randomNum = '';
-                do {
-                    if (gb[randomNum] === 'gameover') {
-                        return
-                    } else randomNum = Math.floor(Math.random() * 8);
-                } while (gb[randomNum] !== undefined);
-                document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
-                gb[randomNum] = Gameboard.activePlayer.getIcon;
-                setTimeout(() => {
+            if (!Gameplay.gameover) {
+                if (GameSetup.computer) {
+                    let randomNum = '';
+                    do {
+                        randomNum = Math.floor(Math.random() * 9);
+                    } while (gb[randomNum] !== undefined && gb[randomNum] !== 'gameover');
+                    document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
+                    gb[randomNum] = Gameboard.activePlayer.getIcon;
                     move();
-                }, 50);
+                }
             }
         }, 500);
+    }
+
+    const swapPlayers = () => {
+        if (Gameboard.activePlayer === Gameboard.player1) {
+            Gameboard.activePlayer = Gameboard.player2;
+        } else if (Gameboard.activePlayer === Gameboard.player2) {
+            Gameboard.activePlayer = Gameboard.player1;
+        } else Gameboard.activePlayer = '';
     }
 
     const move = () => {
@@ -132,6 +146,7 @@ const Gameplay = (() => {
         ) {
             Gameboard.activePlayer.score++;
             Gameboard.displayScores();
+            Gameboard.winner = Gameboard.activePlayer;
             setTimeout(() => {
                 alert(`${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`);
             }, 10);
@@ -142,12 +157,9 @@ const Gameplay = (() => {
                 }    
             } 
             document.querySelector('.newMatch').style.visibility = 'visible';
+            Gameplay.gameover = true;
             return;
-        } else if (Gameboard.activePlayer === Gameboard.player1) {
-            Gameboard.activePlayer = Gameboard.player2;
-        } else if (Gameboard.activePlayer === Gameboard.player2) {
-            Gameboard.activePlayer = Gameboard.player1;
-        } else Gameboard.activePlayer = null;
+        } else swapPlayers();
         
         let count = 0;
         for (i = 0; i < gb.length; i++) {
@@ -155,6 +167,7 @@ const Gameplay = (() => {
                 count++;
             }
             if (count === 9) {
+                Gameplay.gameover = true;
                 setTimeout(() => {
                     alert('It\'s a draw');
                     document.querySelector('.newMatch').style.visibility = 'visible';
@@ -166,7 +179,7 @@ const Gameplay = (() => {
         }
     }
     
-    return {play, ComputerPlay};
+    return {play, ComputerPlay, gameover};
 })();
 
 const GameSetup = (() => {
