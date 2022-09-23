@@ -183,10 +183,11 @@ const Gameplay = (() => {
 })();
 
 const GameSetup = (() => {
+    let computer = false;
     const game = document.querySelector('.gameplay-container');
     const opponent = document.querySelector('.opponent');
-    const name1p = document.getElementById('1pName');
-    const name2p = document.getElementById('2pNames');
+    const name1p = document.getElementById('onePName');
+    const name2p = document.getElementById('twoPNames');
 
     name1p.style.visibility = 'hidden'; 
     name2p.style.visibility = 'hidden';
@@ -198,7 +199,7 @@ const GameSetup = (() => {
         document.getElementById('2pPlay').addEventListener('click', Gameboard.playerNames)
     });
     document.getElementById('computer').addEventListener('click', () => {
-        const computer = true;
+        GameSetup.computer = true;
         opponent.style.visibility = 'hidden';
         name1p.style.visibility = 'visible';
         document.getElementById('1pPlay').addEventListener('click', Gameboard.singlePlayerName)

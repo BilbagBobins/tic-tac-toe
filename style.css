@@ -1,9 +1,97 @@
+/* * {
+    border: 1px solid pink;
+} */
+
+body,
+html {
+    background-color: antiquewhite;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.bg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    font-size: 2em;
+}
+
+.opponent input {
+    border-radius: 10px;
+    height: 40px;
+    width: 200px;
+    font-size: 1.5em;
+    border: none;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.opponent {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    position: relative;
+    top: 200px;
+    /* visibility: hidden; */
+}
+
+.opponent span {
+    grid-column: span 2;
+    justify-self: center;
+    align-self: center;
+}
+
+form {
+    position: relative;
+}
+
+#onePName {
+    top: 150px;
+}
+
+form label {
+    display: flex;
+    align-items: center;
+}
+
+form input {
+    border: none;
+    height: 30px;
+    width: 200px;
+    font-size: 1.5em;
+    margin-left: 10px;
+}
+
+form button {
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+    width: 150px;
+    font-size: 1.5em;
+}
+
 .gameboard-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 100px);
-    grid-template-rows: repeat(auto-fit, 100px);
-    width: 300px;
-    height: 300px;
+    grid-template-columns: repeat(auto-fit, 170px);
+    grid-template-rows: repeat(auto-fit, 170px);
+    width: 510px;
+    height: 510px;
     border: 1px solid black;
 }
 
@@ -11,16 +99,21 @@
     text-align: center;
     border: 1px solid black;
     background-color: rgb(205, 151, 255);
+    font-size: 6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cell:hover {
     cursor: pointer;
+    background-color: rgb(156, 113, 197);
 }
 
 .newMatch {
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 
 .scores-container {
-    visibility: hidden;
+    /* visibility: hidden; */
 }
