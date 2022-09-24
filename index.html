@@ -11,6 +11,7 @@
 <body>
     <div class="bg">
         <header>Tic - Tac - Toe</header>
+        <div class="winner"></div>
         <div class="form-container">
             <div class="opponent">
                 <span>Choose your opponent</span>
@@ -20,7 +21,7 @@
             <form action="" method="post" id="onePName">
                 <ul>
                     <li>
-                        <label for="1pname1">Player name: <input type="text" id="1pname1"></label>
+                        <label for="1pname1">Player name: <input type="text" id="1pname1" placeholder="Human"></label>
                     </li>
                     <li><button type="submit" id="1pPlay">Let's go</button></li>
                 </ul>
@@ -28,10 +29,10 @@
             <form action="" method="post" id="twoPNames">
                 <ul>
                     <li>
-                        <label for="name1">Player 1 name: <input type="text" id="name1"></label>
+                        <label for="name1">Player 1 name: <input type="text" id="name1" placeholder="Player 1"></label>
                     </li>
                     <li>
-                        <label for="name2">Player 2 name: <input type="text" id="name2"></label>
+                        <label for="name2">Player 2 name: <input type="text" id="name2" placeholder="Player 2"></label>
                     </li>
                     <li><button type="submit" id="2pPlay">Let's Play</button></li>
                 </ul>
@@ -39,10 +40,12 @@
         </div>
         <div class="gameplay-container">
             <div class="gameboard-container"></div>
-            <button class="newPlayers">New Players</button>
-            <button class="newMatch">New Match</button>
-            <div class="scores-container">Scores
-                <div id="player1Name">Player 1: </div><span id="player1score">0</span>
+            <div class="button-container">
+                <button class="newPlayers">New Players</button>
+                <button class="newMatch">New Match</button>
+            </div>
+            <div class="scores-container"><span>Scores</span>
+                <div id="player1Name"> </div><span id="player1score">0</span>
                 <div id="player2Name">Player 2: </div><span id="player2score">0</span>
             </div>
         </div>

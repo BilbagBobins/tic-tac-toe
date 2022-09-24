@@ -10,6 +10,7 @@ const Gameboard = (() => {
     let player2 = '';
     let activePlayer = '';
     let winner = player1;
+    document.querySelector('.scores-container').style.visibility = 'hidden';
 
     const board = (() => {
         boardArray = Array.apply(null, Array(9));
@@ -25,6 +26,7 @@ const Gameboard = (() => {
     })();
 
     const resetBoard = () => {
+        Gameplay.winner.textContent = '';
         if (!Gameplay.gameover) {
             Gameboard.activePlayer = Gameboard.winner;
         }
@@ -46,13 +48,23 @@ const Gameboard = (() => {
     
     const playerNames = (event) => {
         event.preventDefault();
-        const player1Name = document.getElementById('name1').value;
+        let player1Name = document.getElementById('name1').value;
+        if (!player1Name) {
+            player1Name = 'Player 1';
+        }
         Gameboard.player1 = Player('X', player1Name, 1);
-        document.getElementById('player1Name').textContent = player1Name + ': ';
+        if (Gameboard.player1.getName) {
+            document.getElementById('player1Name').textContent = player1Name + ': ';
+        }
 
-        const player2Name = document.getElementById('name2').value;
+        let player2Name = document.getElementById('name2').value;
+        if (!player2Name) {
+            player2Name = 'Player 2';
+        }
         Gameboard.player2 = Player('O', player2Name, 2);
-        document.getElementById('player2Name').textContent = player2Name + ': ';
+        if (Gameboard.player2.getName) {
+            document.getElementById('player2Name').textContent = player2Name + ': ';
+        }
         
         GameSetup.name2p.style.visibility = 'hidden';
         
@@ -66,7 +78,10 @@ const Gameboard = (() => {
 
     const singlePlayerName = (event) => {
         event.preventDefault();
-        const playerName = document.getElementById('1pname1').value;
+        let playerName = document.getElementById('1pname1').value;
+        if (!playerName) {
+            playerName = 'Human'
+        }
         Gameboard.player1 = Player('X', playerName, 1);
         Gameboard.player2 = Player('O', 'Computer', 2);
         document.getElementById('player1Name').textContent = playerName + ': ';
@@ -83,7 +98,8 @@ const Gameboard = (() => {
 
 
     document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
-    
+    document.querySelector('.newMatch').style.visibility = 'hidden';
+
     document.querySelector('.newPlayers').addEventListener('click', () => {
         location.reload();
         return false;
@@ -93,6 +109,7 @@ const Gameboard = (() => {
 
 const Gameplay = (() => {
     let gameover = false;
+    const winner = document.querySelector('.winner');
     const play = (cellId) => {
         const cell = document.getElementById(`${cellId}`);
         const gb = Gameboard.boardArray;
@@ -148,7 +165,7 @@ const Gameplay = (() => {
             Gameboard.displayScores();
             Gameboard.winner = Gameboard.activePlayer;
             setTimeout(() => {
-                alert(`${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`);
+                winner.textContent = `${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`;
             }, 10);
             
             for (let i = 0; i < gb.length; i++) {
@@ -169,7 +186,7 @@ const Gameplay = (() => {
             if (count === 9) {
                 Gameplay.gameover = true;
                 setTimeout(() => {
-                    alert('It\'s a draw');
+                    winner.textContent = 'It\'s a draw';
                     document.querySelector('.newMatch').style.visibility = 'visible';
                 }, 0);
                 for (let i = 0; i < gb.length; i++) {
@@ -179,7 +196,7 @@ const Gameplay = (() => {
         }
     }
     
-    return {play, ComputerPlay, gameover};
+    return {play, ComputerPlay, gameover, winner};
 })();
 
 const GameSetup = (() => {
@@ -196,12 +213,14 @@ const GameSetup = (() => {
     document.getElementById('human').addEventListener('click', () => {
         opponent.style.visibility = 'hidden';
         name2p.style.visibility = 'visible';
+        document.getElementById('name1').focus();
         document.getElementById('2pPlay').addEventListener('click', Gameboard.playerNames)
     });
     document.getElementById('computer').addEventListener('click', () => {
         GameSetup.computer = true;
         opponent.style.visibility = 'hidden';
         name1p.style.visibility = 'visible';
+        document.getElementById('1pname1').focus();
         document.getElementById('1pPlay').addEventListener('click', Gameboard.singlePlayerName)
     });
     return{name1p, name2p, game, computer};
