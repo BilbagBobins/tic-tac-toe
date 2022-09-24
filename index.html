@@ -12,43 +12,48 @@
     <div class="bg">
         <header>Tic - Tac - Toe</header>
         <div class="winner"></div>
-        <div class="form-container">
-            <div class="opponent">
-                <span>Choose your opponent</span>
-                <input type="submit" value="Human" id="human">
-                <input type="submit" value="Computer" id="computer">
+        <div class="main-container">
+            <div class="form-container">
+                <div class="opponent">
+                    <span>Choose your opponent</span>
+                    <input type="submit" value="2 Player" id="human">
+                    <input type="submit" value="vs Computer" id="computer">
+                </div>
+                <form action="" method="post" id="onePName">
+                    <ul>
+                        <li>
+                            <label for="1pname1">Player name: <input type="text" id="1pname1" placeholder="Human"></label>
+                        </li>
+                        <li><button type="submit" id="1pPlay">Let's go</button></li>
+                    </ul>
+                </form>
+                <form action="" method="post" id="twoPNames">
+                    <ul>
+                        <li>
+                            <label for="name1">Player 1 name: <input type="text" id="name1" placeholder="Player 1"></label>
+                        </li>
+                        <li>
+                            <label for="name2">Player 2 name: <input type="text" id="name2" placeholder="Player 2"></label>
+                        </li>
+                        <li><button type="submit" id="2pPlay">Let's Play</button></li>
+                    </ul>
+                </form>
             </div>
-            <form action="" method="post" id="onePName">
-                <ul>
-                    <li>
-                        <label for="1pname1">Player name: <input type="text" id="1pname1" placeholder="Human"></label>
-                    </li>
-                    <li><button type="submit" id="1pPlay">Let's go</button></li>
-                </ul>
-            </form>
-            <form action="" method="post" id="twoPNames">
-                <ul>
-                    <li>
-                        <label for="name1">Player 1 name: <input type="text" id="name1" placeholder="Player 1"></label>
-                    </li>
-                    <li>
-                        <label for="name2">Player 2 name: <input type="text" id="name2" placeholder="Player 2"></label>
-                    </li>
-                    <li><button type="submit" id="2pPlay">Let's Play</button></li>
-                </ul>
-            </form>
+            <div class="gameplay-container">
+                <div class="board-group">
+                    <div class="gameboard-container"></div>
+                    <div class="button-container">
+                        <button class="newPlayers">New Players</button>
+                        <button class="newMatch">New Match</button>
+                    </div>
+                </div>
+                <div class="scores-container"><span>Scores</span>
+                    <div id="player1Name"> </div><span id="player1score"> 0</span>
+                    <div id="player2Name"> </div><span id="player2score"> 0</span>
+                </div>
+            </div>
         </div>
-        <div class="gameplay-container">
-            <div class="gameboard-container"></div>
-            <div class="button-container">
-                <button class="newPlayers">New Players</button>
-                <button class="newMatch">New Match</button>
-            </div>
-            <div class="scores-container"><span>Scores</span>
-                <div id="player1Name"> </div><span id="player1score">0</span>
-                <div id="player2Name">Player 2: </div><span id="player2score">0</span>
-            </div>
-        </div>
+        <footer>Copyright (c) 2022 BilbagBobins</footer>
     </div>
 </body>
 </html>

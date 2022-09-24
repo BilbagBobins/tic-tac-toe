@@ -165,7 +165,7 @@ const Gameplay = (() => {
             Gameboard.displayScores();
             Gameboard.winner = Gameboard.activePlayer;
             setTimeout(() => {
-                winner.textContent = `${Gameboard.activePlayer.getName} ${Gameboard.activePlayer.getIcon} wins`;
+                winner.textContent = `${Gameboard.activePlayer.getName} wins`;
             }, 10);
             
             for (let i = 0; i < gb.length; i++) {
