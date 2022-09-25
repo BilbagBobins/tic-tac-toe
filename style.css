@@ -108,12 +108,14 @@ form button:hover,
     grid-column: 2;
     width: 1000px;
     display: grid;
-    grid-template-columns: 3.5fr 1fr;
+    grid-template-columns: 2.5fr 1fr;
+    grid-template-rows: 1fr 3fr;
 }
 
 .board-group {
     justify-self: end;
     margin-right: 100px;
+    grid-row: span 2;
 }
 
 .gameboard-container {
@@ -146,23 +148,37 @@ form button:hover,
     background-color: rgb(156, 113, 197);
 }
 
+.turns {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 25px;
+    font-weight: bold;
+}
+
 .scores-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 45px 1fr 45px;
     width: fit-content;
     height: 100px;
     font-size: 22px;
     margin-top: 25px;
+    grid-column: 2;
+    grid-row: 2;
 }
 
 .scores-container :first-child {
-    grid-column: span 2;
+    grid-column: span 3;
     font-size: 25px;
 }
 
-#player1Name,
-#player2Name {
-    margin-right: 10px;
+.scores-container span {
+    justify-self: center;
+    font-weight: bold;
+}
+
+#player1score,
+#player2score {
+    font-weight: 500;
 }
 
 footer {

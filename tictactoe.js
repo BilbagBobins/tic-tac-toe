@@ -40,6 +40,12 @@ const Gameboard = (() => {
                 Gameplay.ComputerPlay();
             }
         }
+        if (Gameboard.activePlayer) {
+            document.querySelector('.turns').textContent = `${Gameboard.activePlayer.getName}'s turn`;
+        } else {
+            document.querySelector('.turns').textContent = `${Gameboard.player1.getName}'s turn`;
+        }
+        
     };
     const displayScores = () => {
         document.getElementById('player1score').textContent = Gameboard.player1.score;
@@ -54,7 +60,7 @@ const Gameboard = (() => {
         }
         Gameboard.player1 = Player('X', player1Name, 1);
         if (Gameboard.player1.getName) {
-            document.getElementById('player1Name').textContent = player1Name + ': ';
+            document.getElementById('player1Name').textContent = `${player1Name}: `;
         }
 
         let player2Name = document.getElementById('name2').value;
@@ -63,7 +69,7 @@ const Gameboard = (() => {
         }
         Gameboard.player2 = Player('O', player2Name, 2);
         if (Gameboard.player2.getName) {
-            document.getElementById('player2Name').textContent = player2Name + ': ';
+            document.getElementById('player2Name').textContent = `${player2Name}: `;
         }
         
         GameSetup.name2p.style.visibility = 'hidden';
@@ -84,8 +90,8 @@ const Gameboard = (() => {
         }
         Gameboard.player1 = Player('X', playerName, 1);
         Gameboard.player2 = Player('O', 'Computer', 2);
-        document.getElementById('player1Name').textContent = playerName + ': ';
-        document.getElementById('player2Name').textContent = 'Computer: ';
+        document.getElementById('player1Name').textContent = `${playerName}: `;
+        document.getElementById('player2Name').textContent = `Computer: `;
 
         GameSetup.name1p.style.visibility = 'hidden';
         GameSetup.game.style.visibility = 'visible';
@@ -147,6 +153,7 @@ const Gameplay = (() => {
         } else if (Gameboard.activePlayer === Gameboard.player2) {
             Gameboard.activePlayer = Gameboard.player1;
         } else Gameboard.activePlayer = '';
+        document.querySelector('.turns').textContent = `${Gameboard.activePlayer.getName}'s turn`;
     }
 
     const move = () => {
@@ -164,6 +171,7 @@ const Gameplay = (() => {
             Gameboard.activePlayer.score++;
             Gameboard.displayScores();
             Gameboard.winner = Gameboard.activePlayer;
+            document.querySelector('.turns').textContent = '';
             setTimeout(() => {
                 winner.textContent = `${Gameboard.activePlayer.getName} wins`;
             }, 10);
@@ -185,6 +193,7 @@ const Gameplay = (() => {
             }
             if (count === 9) {
                 Gameplay.gameover = true;
+                document.querySelector('.turns').textContent = '';
                 setTimeout(() => {
                     winner.textContent = 'It\'s a draw';
                     document.querySelector('.newMatch').style.visibility = 'visible';
