@@ -45,6 +45,7 @@ const Gameboard = (() => {
         } else {
             document.querySelector('.turns').textContent = `${Gameboard.player1.getName}'s turn`;
         }
+        document.querySelector('.winner').style.visibility = 'hidden';
         
     };
     const displayScores = () => {
@@ -104,7 +105,6 @@ const Gameboard = (() => {
 
 
     document.querySelector('.newMatch').addEventListener('click', () => resetBoard())
-    document.querySelector('.newMatch').style.visibility = 'hidden';
 
     document.querySelector('.newPlayers').addEventListener('click', () => {
         location.reload();
@@ -124,7 +124,7 @@ const Gameplay = (() => {
             cell.textContent = Gameboard.activePlayer.getIcon;
             gb[cellId] = Gameboard.activePlayer.getIcon;
             move();
-            if (!Gameplay.gameover) {
+            if (!Gameplay.gameover && GameSetup.computer) {
                 ComputerPlay();
             }
         }  
@@ -133,17 +133,13 @@ const Gameplay = (() => {
     const ComputerPlay = () => {
         const gb = Gameboard.boardArray;
         setTimeout(() => {
-            if (!Gameplay.gameover) {
-                if (GameSetup.computer) {
-                    let randomNum = '';
-                    do {
-                        randomNum = Math.floor(Math.random() * 9);
-                    } while (gb[randomNum] !== undefined && gb[randomNum] !== 'gameover');
-                    document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
-                    gb[randomNum] = Gameboard.activePlayer.getIcon;
-                    move();
-                }
-            }
+            let randomNum = '';
+            do {
+                randomNum = Math.floor(Math.random() * 9);
+            } while (gb[randomNum] !== undefined && gb[randomNum] !== 'gameover');
+            document.getElementById(randomNum).textContent = Gameboard.activePlayer.getIcon;
+            gb[randomNum] = Gameboard.activePlayer.getIcon;
+            move();
         }, 500);
     }
 
@@ -154,6 +150,9 @@ const Gameplay = (() => {
             Gameboard.activePlayer = Gameboard.player1;
         } else Gameboard.activePlayer = '';
         document.querySelector('.turns').textContent = `${Gameboard.activePlayer.getName}'s turn`;
+        if (Gameboard.activePlayer.getIcon == 'X') {
+            document.querySelector('.turns').style.color = 'blue';
+        } else document.querySelector('.turns').style.color = 'red'
     }
 
     const move = () => {
@@ -173,6 +172,7 @@ const Gameplay = (() => {
             Gameboard.winner = Gameboard.activePlayer;
             document.querySelector('.turns').textContent = '';
             setTimeout(() => {
+                winner.style.visibility = 'visible';
                 winner.textContent = `${Gameboard.activePlayer.getName} wins`;
             }, 10);
             
@@ -195,6 +195,7 @@ const Gameplay = (() => {
                 Gameplay.gameover = true;
                 document.querySelector('.turns').textContent = '';
                 setTimeout(() => {
+                    winner.style.visibility = 'visible';
                     winner.textContent = 'It\'s a draw';
                     document.querySelector('.newMatch').style.visibility = 'visible';
                 }, 0);

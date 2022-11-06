@@ -21,10 +21,19 @@ header {
     align-self: end;
 }
 
-.winner {
-    margin-top: 20px;
+.winner-container {
     font-size: 2em;
     min-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.winner {
+    background-color: white;
+    padding: 12px 30px;
+    border: 2px solid black;
+    border-radius: 30px;
+    visibility: hidden;
 }
 
 .form-container {
@@ -153,6 +162,7 @@ form button:hover,
     grid-row: 1;
     font-size: 25px;
     font-weight: bold;
+    color: blue;
 }
 
 .scores-container {
